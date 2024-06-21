@@ -10,6 +10,7 @@ use crate::utils::*;
 use crate::vertex::PyVertex;
 use crate::wrappers::prop::Prop;
 use docbrown::db::edge::EdgeView;
+use docbrown::db::graph_window::WindowedGraph;
 use docbrown::db::view_api::time::WindowSet;
 use docbrown::db::view_api::*;
 use itertools::Itertools;
@@ -27,6 +28,17 @@ pub struct PyEdge {
 impl From<EdgeView<DynamicGraph>> for PyEdge {
     fn from(value: EdgeView<DynamicGraph>) -> Self {
         Self { edge: value }
+    }
+}
+
+impl From<EdgeView<WindowedGraph<DynamicGraph>>> for PyEdge {
+    fn from(value: EdgeView<WindowedGraph<DynamicGraph>>) -> Self {
+        Self {
+            edge: EdgeView {
+                graph: DynamicGraph::new(value.graph),
+                edge: value.edge,
+            },
+        }
     }
 }
 
